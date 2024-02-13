@@ -66,11 +66,22 @@ def generic_adjust(colors, light):
         for color in colors:
             color = util.saturate_color(color, 0.60)
             color = util.darken_color(color, 0.5)
+        
+        colors[0] = util.lighten_color(colors[0], 0.75)
+        colors[7] = util.darken_color(colors[0], 0.50)
+        colors[8] = util.darken_color(colors[0], 0.25)
+        colors[1] = util.darken_color(colors[1], 0.25)
+        colors[2] = util.darken_color(colors[2], 0.25)
+        colors[3] = util.darken_color(colors[3], 0.25)
+        colors[4] = util.darken_color(colors[4], 0.25)
+        colors[5] = util.darken_color(colors[5], 0.25)
+        colors[6] = util.darken_color(colors[6], 0.25)
+        colors[15] = util.darken_color(colors[0], 0.75)
 
-        colors[0] = util.lighten_color(colors[0], 0.95)
+        """colors[0] = util.lighten_color(colors[0], 0.95)
         colors[7] = util.darken_color(colors[0], 0.75)
         colors[8] = util.darken_color(colors[0], 0.25)
-        colors[15] = colors[7]
+        colors[15] = colors[7]"""
 
     else:
         # Darken the background color slightly.
