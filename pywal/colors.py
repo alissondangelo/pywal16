@@ -91,7 +91,7 @@ def generic_adjust(colors, light):
             colors[0] = util.lighten_color(colors[0], 0.04)
 
         colors[7] = util.lighten_color(colors[14], 0.05)
-        colors[8] = util.lighten_color(colors[0], 0.08)
+        colors[8] = util.lighten_color(colors[0], 0.02)
         colors[1] = util.darken_color(colors[1], 0.25)
         colors[2] = util.darken_color(colors[2], 0.25)
         colors[3] = util.darken_color(colors[3], 0.25)
