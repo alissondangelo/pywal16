@@ -7,6 +7,7 @@ import random
 import re
 import sys
 
+
 from . import theme
 from . import util
 from .settings import CACHE_DIR, MODULE_DIR, __cache_version__
@@ -62,58 +63,32 @@ def colors_to_dict(colors, img):
 
 def generic_adjust(colors, light):
     """Generic color adjustment for themers."""
-    if light:
-        for color in colors:
-            color = util.saturate_color(color, 0.60)
-            color = util.darken_color(color, 0.5)
-        
-        colors[0] = util.lighten_color(colors[0], 0.75)
-        colors[7] = util.darken_color(colors[0], 0.50)
-        colors[8] = util.darken_color(colors[0], 0.25)
-        colors[1] = util.darken_color(colors[1], 0.25)
-        colors[2] = util.darken_color(colors[2], 0.25)
-        colors[3] = util.darken_color(colors[3], 0.25)
-        colors[4] = util.darken_color(colors[4], 0.25)
-        colors[5] = util.darken_color(colors[5], 0.25)
-        colors[6] = util.darken_color(colors[6], 0.25)
-        colors[15] = util.darken_color(colors[0], 0.75)
 
-        """colors[0] = util.lighten_color(colors[0], 0.95)
-        colors[7] = util.darken_color(colors[0], 0.75)
-        colors[8] = util.darken_color(colors[0], 0.25)
-        colors[15] = colors[7]"""
-
+    limitdarklight = 50
+    normalizer = 12
+    h, l, s = util.hex_to_hls(colors[0])
+    if l > limitdarklight:
+        colors[0] = util.alter_brightness(colors[0], -l/2.5)
     else:
-        # Darken the background color slightly.
-        if colors[0][1] > "1":
-            colors[0] = util.darken_color(colors[0], 0.20)
-        else:
-            colors[0] = util.lighten_color(colors[0], 0.04)
+        colors[0] = util.alter_brightness(colors[0], normalizer-(normalizer*l)/limitdarklight)
+    print(l)
 
-        colors[7] = util.lighten_color(colors[14], 0.05)
-        colors[8] = util.lighten_color(colors[0], 0.02)
-        colors[1] = util.darken_color(colors[1], 0.25)
-        colors[2] = util.darken_color(colors[2], 0.25)
-        colors[3] = util.darken_color(colors[3], 0.25)
-        colors[4] = util.darken_color(colors[4], 0.25)
-        colors[5] = util.darken_color(colors[5], 0.25)
-        colors[6] = util.darken_color(colors[6], 0.25)
-        colors[15] = util.lighten_color(colors[14], 0.25)
+    colors[7] = util.alter_brightness(colors[14], 5)
+    colors[8] = util.alter_brightness(colors[0], 20)
+    colors[1] = util.alter_brightness(colors[1], -25)
+    colors[2] = util.alter_brightness(colors[2], -25)
+    colors[3] = util.alter_brightness(colors[3], -25)
+    colors[4] = util.alter_brightness(colors[4], -25)
+    colors[5] = util.alter_brightness(colors[5], -25)
+    colors[6] = util.alter_brightness(colors[6], -25)
+    colors[15] = util.alter_brightness(colors[14], 25)
 
-        """colors[0] = util.darken_color(colors[0], 0.80)
-        colors[7] = util.lighten_color(colors[0], 0.75)
-        colors[8] = util.lighten_color(colors[0], 0.25)
-        colors[15] = colors[7]"""
-
-    return colors
-
-
-def saturate_colors(colors, amount):
-    """Saturate all colors."""
-    if amount and float(amount) <= 1.0:
-        for i, _ in enumerate(colors):
-            if i not in [0, 7, 8, 15]:
-                colors[i] = util.saturate_color(colors[i], float(amount))
+    if light:
+        tempcolors = colors.copy()
+        i = 15
+        for tempcolor in tempcolors:
+            colors[i] = tempcolor
+            i -= 1
 
     return colors
 
@@ -179,7 +154,7 @@ def get(img, light=False, backend="wal", cache_dir=CACHE_DIR, sat=""):
         logging.info("Using %s backend.", backend)
         backend = sys.modules["pywal.backends.%s" % backend]
         colors = getattr(backend, "get")(img, light)
-        colors = colors_to_dict(saturate_colors(colors, sat), img)
+        colors = colors_to_dict(util.saturate_colors(colors, sat), img)
 
         util.save_file_json(colors, cache_file)
         logging.info("Generation complete.")
