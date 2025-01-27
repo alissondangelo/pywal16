@@ -23,7 +23,7 @@ def imagemagick(color_count, img, magick_command):
 def has_im():
     """Check to see if the user has im installed."""
     if shutil.which("magick"):
-        return ["magick", "convert"]
+        return ["magick"]
 
     if shutil.which("convert"):
         return ["convert"]
