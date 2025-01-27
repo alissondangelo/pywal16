@@ -159,6 +159,21 @@ def setup_logging():
     logging.addLevelName(logging.WARNING, '\033[1;33mW')
 
 
+def hex_to_hls(hex_string):
+    """convert a hex value to hls coordinates"""
+    r, g, b = hex_to_rgb(hex_string)
+    return colorsys.rgb_to_hls(r, g, b)
+
+
+def hls_to_hex(hls):
+    """convert a hls coordinate to hex code"""
+    h, l, s = hls
+    r, g, b = colorsys.hls_to_rgb(h, l, s)
+    rgb_int = [max(min(int(elem), 255), 0) for elem in [r, g, b]]
+
+    return rgb_to_hex(rgb_int)
+
+
 def hex_to_rgb(color):
     """Convert a hex color to rgb."""
     return tuple(bytes.fromhex(color.strip("#")))
@@ -173,6 +188,24 @@ def hex_to_xrgba(color):
 def rgb_to_hex(color):
     """Convert an rgb color to hex."""
     return "#%02x%02x%02x" % (*color,)
+
+
+def alter_brightness(hex_string, amount, sat=0):
+    """alters amount of light and saturation in a color"""
+    h, l, s = hex_to_hls(hex_string)
+    l = max(min(l + amount, 255), 1)
+    s = min(max(s - sat, -1), 0)
+
+    return hls_to_hex([h, l, s])
+
+def saturate_colors(colors, amount):
+    """Saturate all colors."""
+    if amount and float(amount) <= 1.0:
+        for i, _ in enumerate(colors):
+            if i not in [0, 7, 8, 15]:
+                colors[i] = util.saturate_color(colors[i], float(amount))
+
+    return colors
 
 
 def darken_color(color, amount):
