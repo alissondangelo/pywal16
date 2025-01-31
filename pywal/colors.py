@@ -71,7 +71,7 @@ def generic_adjust(colors, light):
         colors[0] = util.alter_brightness(colors[0], -l/2.5)
     else:
         colors[0] = util.alter_brightness(colors[0], normalizer-(normalizer*l)/limitdarklight)
-    print(l)
+    
 
     colors[7] = util.alter_brightness(colors[14], 5)
     colors[8] = util.alter_brightness(colors[0], 20)
