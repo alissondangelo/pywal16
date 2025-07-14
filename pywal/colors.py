@@ -64,15 +64,11 @@ def colors_to_dict(colors, img):
 def generic_adjust(colors, light):
     """Generic color adjustment for themers."""
 
-    limitdarklight = 50
-    normalizer = 12
+    limitDarkLight = 30
     h, l, s = util.hex_to_hls(colors[0])
-    if l > limitdarklight:
-        colors[0] = util.alter_brightness(colors[0], -l/2.5)
-    else:
-        colors[0] = util.alter_brightness(colors[0], normalizer-(normalizer*l)/limitdarklight)
+    newBrightness = (limitDarkLight-l)/2
+    colors[0] = util.alter_brightness(colors[0], newBrightness)
     
-
     colors[7] = util.alter_brightness(colors[14], 5)
     colors[8] = util.alter_brightness(colors[0], 20)
     colors[1] = util.alter_brightness(colors[1], -25)
